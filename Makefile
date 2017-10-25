@@ -4,6 +4,9 @@ CONTAINER_NAME := wordpress
 ENV_FILE_NAME := wordpress_env
 HOST_PORT := 8301
 
+DEV_USER_ID := 1000
+DEV_USER_GROUP := 1000
+
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
@@ -49,3 +52,10 @@ shell:
 
 docker_ip:
 		@ip addr show docker0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+
+edit_mode:
+		@chown 33:33 -R $(MAKE_DIR)/src/wp-content
+
+prod_mode:
+		@chown $(DEV_USER_ID):$(DEV_USER_GROUP) -R $(MAKE_DIR)/src/wp-content
+
